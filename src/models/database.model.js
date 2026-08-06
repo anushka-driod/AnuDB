@@ -1,0 +1,29 @@
+const db = require("../database/db");
+
+async function createDatabase(name, description, ownerId) {
+    const result = await db.query(
+        `INSERT INTO databases(name, description, owner_id)
+         VALUES($1, $2, $3)
+         RETURNING *`,
+        [name, description, ownerId]
+    );
+
+    return result.rows[0];
+}
+
+async function getDatabases(ownerId) {
+    const result = await db.query(
+        `SELECT *
+         FROM databases
+         WHERE owner_id = $1
+         ORDER BY created_at DESC`,
+        [ownerId]
+    );
+
+    return result.rows;
+}
+
+module.exports = {
+    createDatabase,
+    getDatabases
+};
