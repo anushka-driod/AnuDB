@@ -1078,3 +1078,34 @@ outline:none;
 border-color:#2563EB;
 
 }
+.pagination{
+display:flex;
+justify-content:flex-end;
+align-items:center;
+gap:10px;
+margin-top:25px;
+}
+
+.page-btn{
+min-width:42px;
+height:42px;
+border:none;
+border-radius:10px;
+background:#1E293B;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.page-btn:hover{
+background:#2563EB;
+}
+
+.active-page{
+background:#2563EB;
+}
+
+.pagination button:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
