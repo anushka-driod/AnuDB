@@ -7,6 +7,13 @@ import { DatabaseProvider } from "./context/DatabaseContext";
 
 import App from "./App";
 import "./styles/global.css";
+import { ThemeProvider } from "./context/ThemeContext";
+
+<ThemeProvider>
+   <BrowserRouter>
+      <App/>
+   </BrowserRouter>
+</ThemeProvider>
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
