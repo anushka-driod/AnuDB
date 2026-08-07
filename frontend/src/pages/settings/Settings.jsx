@@ -2,7 +2,7 @@ import ProfileSettings from "../../components/settings/ProfileSettings";
 import SecuritySettings from "../../components/settings/SecuritySettings";
 import Preferences from "../../components/settings/Preferences";
 import DangerZone from "../../components/settings/DangerZone";
-
+import ProfileAvatar from "../../components/settings/ProfileAvatar";
 
 export default function Settings() {
 
@@ -25,6 +25,7 @@ export default function Settings() {
       </div>
 
       <ProfileSettings />
+      <ProfileAvatar />
 
       <SecuritySettings />
 

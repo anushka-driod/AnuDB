@@ -3,34 +3,37 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import { DatabaseProvider } from "./context/DatabaseContext";
-
 import App from "./App";
-import "./styles/global.css";
+
+import { DatabaseProvider } from "./context/DatabaseContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
-<ThemeProvider>
-   <BrowserRouter>
-      <App/>
-   </BrowserRouter>
-</ThemeProvider>
+import "./styles/global.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+
     <BrowserRouter>
-      <DatabaseProvider>
 
-        <App />
+      <ThemeProvider>
 
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            duration: 3000,
-          }}
-        />
+        <DatabaseProvider>
 
-      </DatabaseProvider>
+          <App />
+
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+              duration: 3000,
+            }}
+          />
+
+        </DatabaseProvider>
+
+      </ThemeProvider>
+
     </BrowserRouter>
+
   </React.StrictMode>
 );
