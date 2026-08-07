@@ -24,8 +24,10 @@ export default function Settings() {
 
       </div>
 
+<ProfileAvatar />
+
       <ProfileSettings />
-      <ProfileAvatar />
+      
 
       <SecuritySettings />
 

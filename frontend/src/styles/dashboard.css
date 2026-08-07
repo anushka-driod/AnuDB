@@ -1049,3 +1049,32 @@ font-size:48px;
 font-weight:bold;
 color:white;
 }
+.filter-select{
+
+height:56px;
+
+padding:0 18px;
+
+background:#141C2F;
+
+color:white;
+
+border:1px solid #24304A;
+
+border-radius:14px;
+
+font-size:15px;
+
+cursor:pointer;
+
+min-width:170px;
+
+}
+
+.filter-select:focus{
+
+outline:none;
+
+border-color:#2563EB;
+
+}
