@@ -12,7 +12,25 @@ async function getDatabases(ownerId) {
     return await databaseModel.getDatabases(ownerId);
 }
 
+async function updateDatabase(id, name, description, ownerId) {
+    return await databaseModel.updateDatabase(
+        id,
+        name,
+        description,
+        ownerId
+    );
+}
+
+async function deleteDatabase(id, ownerId) {
+    return await databaseModel.deleteDatabase(
+        id,
+        ownerId
+    );
+}
+
 module.exports = {
     createDatabase,
-    getDatabases
+    getDatabases,
+    updateDatabase,
+    deleteDatabase
 };
