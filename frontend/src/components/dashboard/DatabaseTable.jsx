@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { FiDatabase } from "react-icons/fi";
-
-import DatabaseModal from "../database/DatabaseModal";
+import {
+  FiDatabase,
+  FiEye,
+  FiEdit2,
+  FiTrash2,
+} from "react-icons/fi";
 import { useDatabase } from "../../context/DatabaseContext";
 
 export default function DatabaseTable() {
-
-  const [open, setOpen] = useState(false);
 
   const { databases } = useDatabase();
 
@@ -14,29 +15,20 @@ export default function DatabaseTable() {
     <>
       <div className="dashboard-panel">
 
-        <div className="table-header">
-
-          <h3>Databases</h3>
-
-          <button
-            className="new-db-btn"
-            onClick={() => setOpen(true)}
-          >
-            + New Database
-          </button>
-
-        </div>
+       <div className="table-header">
+  <h3>Databases</h3>
+</div>
 
         <table className="database-table">
-
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Tables</th>
-              <th>Storage</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Tables</th>
+    <th>Storage</th>
+    <th>Status</th>
+    <th>Actions</th>
+  </tr>
+</thead>
 
           <tbody>
 
@@ -56,18 +48,46 @@ export default function DatabaseTable() {
                 <td>{db.storage}</td>
 
                 <td>
+  <span
+    className={
+      db.status === "Active"
+        ? "badge-active"
+        : "badge-pending"
+    }
+  >
+    {db.status}
+  </span>
+</td>
 
-                  <span
-                    className={
-                      db.status === "Active"
-                        ? "badge-active"
-                        : "badge-pending"
-                    }
-                  >
-                    {db.status}
-                  </span>
+<td>
+  <div className="table-actions">
 
-                </td>
+    <button
+      className="table-action-btn view-btn"
+      title="View"
+      onClick={() => alert(`Viewing ${db.name}`)}
+    >
+      <FiEye />
+    </button>
+
+    <button
+      className="table-action-btn edit-btn"
+      title="Edit"
+      onClick={() => alert(`Editing ${db.name}`)}
+    >
+      <FiEdit2 />
+    </button>
+
+    <button
+      className="table-action-btn delete-btn"
+      title="Delete"
+      onClick={() => alert(`Deleting ${db.name}`)}
+    >
+      <FiTrash2 />
+    </button>
+
+  </div>
+</td>
 
               </tr>
 
@@ -78,11 +98,6 @@ export default function DatabaseTable() {
         </table>
 
       </div>
-
-      <DatabaseModal
-        open={open}
-        onClose={() => setOpen(false)}
-      />
 
     </>
   );

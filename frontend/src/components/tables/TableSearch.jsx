@@ -1,7 +1,7 @@
 import { FiSearch } from "react-icons/fi";
 
-export default function DatabaseSearch({
-  onCreateDatabase,
+export default function TableSearch({
+  onCreateTable,
 }) {
   return (
     <div className="database-search-container">
@@ -12,16 +12,16 @@ export default function DatabaseSearch({
 
         <input
           type="text"
-          placeholder="Search databases..."
+          placeholder="Search tables..."
         />
 
       </div>
 
       <button
         className="new-db-btn"
-        onClick={onCreateDatabase}
+        onClick={onCreateTable}
       >
-        + New Database
+        + New Table
       </button>
 
     </div>

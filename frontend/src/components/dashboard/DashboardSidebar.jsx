@@ -1,3 +1,4 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiGrid,
   FiDatabase,
@@ -11,39 +12,94 @@ import {
 } from "react-icons/fi";
 
 const menu = [
-  { icon: <FiGrid />, label: "Dashboard" },
-  { icon: <FiDatabase />, label: "Databases" },
-  { icon: <FiTable />, label: "Tables" },
-  { icon: <FiFileText />, label: "Records" },
-  { icon: <FiCode />, label: "API" },
-  { icon: <FiHardDrive />, label: "Storage" },
-  { icon: <FiBarChart2 />, label: "Analytics" },
-  { icon: <FiSettings />, label: "Settings" },
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    icon: <FiGrid />,
+  },
+  {
+    label: "Databases",
+    path: "/databases",
+    icon: <FiDatabase />,
+  },
+  {
+    label: "Tables",
+    path: "/tables",
+    icon: <FiTable />,
+  },
+  {
+    label: "Records",
+    path: "/records",
+    icon: <FiFileText />,
+  },
+  {
+    label: "API",
+    path: "/api",
+    icon: <FiCode />,
+  },
+  {
+    label: "Storage",
+    path: "/storage",
+    icon: <FiHardDrive />,
+  },
+  {
+    label: "Analytics",
+    path: "/analytics",
+    icon: <FiBarChart2 />,
+  },
+  {
+    label: "Settings",
+    path: "/settings",
+    icon: <FiSettings />,
+  },
 ];
 
 export default function DashboardSidebar() {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate("/");
+  };
+
   return (
     <aside className="dashboard-sidebar">
+
       <div className="sidebar-logo">
-        <span>AnuDB</span>
+        <h2>AnuDB</h2>
       </div>
 
-      <nav>
+      <nav className="sidebar-nav">
+
         {menu.map((item) => (
-          <button
+
+          <NavLink
             key={item.label}
-            className="sidebar-item"
+            to={item.path}
+            className={({ isActive }) =>
+              isActive
+                ? "sidebar-item sidebar-active"
+                : "sidebar-item"
+            }
           >
             {item.icon}
             <span>{item.label}</span>
-          </button>
+          </NavLink>
+
         ))}
+
       </nav>
 
-      <button className="sidebar-logout">
+      <button
+        className="sidebar-logout"
+        onClick={handleLogout}
+      >
         <FiLogOut />
-        Logout
+        <span>Logout</span>
       </button>
+
     </aside>
   );
 }

@@ -1,5 +1,5 @@
 import { FiBell, FiSearch } from "react-icons/fi";
-
+import { FiBell } from "react-icons/fi";
 export default function DashboardNavbar() {
   return (
     <header className="dashboard-navbar">
@@ -16,6 +16,12 @@ export default function DashboardNavbar() {
         <button className="navbar-icon">
           <FiBell />
         </button>
+        <button className="icon-btn">
+    <FiBell />
+</button>
+<button className="icon-btn">
+    <FiBell />
+</button>
 
         <div className="navbar-profile">
           A

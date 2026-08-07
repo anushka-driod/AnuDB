@@ -1,29 +1,32 @@
 import { FiSearch } from "react-icons/fi";
 
-export default function DatabaseSearch({
-  onCreateDatabase,
+export default function ApiSearch({
+  onGenerate,
 }) {
+
   return (
+
     <div className="database-search-container">
 
       <div className="search-box">
 
-        <FiSearch className="search-icon" />
+        <FiSearch className="search-icon"/>
 
         <input
-          type="text"
-          placeholder="Search databases..."
+          placeholder="Search APIs..."
         />
 
       </div>
 
       <button
         className="new-db-btn"
-        onClick={onCreateDatabase}
+        onClick={onGenerate}
       >
-        + New Database
+        + Generate API
       </button>
 
     </div>
+
   );
+
 }

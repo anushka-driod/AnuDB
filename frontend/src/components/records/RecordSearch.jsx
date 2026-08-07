@@ -1,9 +1,11 @@
 import { FiSearch } from "react-icons/fi";
 
-export default function DatabaseSearch({
-  onCreateDatabase,
+export default function RecordSearch({
+  onCreateRecord,
 }) {
+
   return (
+
     <div className="database-search-container">
 
       <div className="search-box">
@@ -11,19 +13,20 @@ export default function DatabaseSearch({
         <FiSearch className="search-icon" />
 
         <input
-          type="text"
-          placeholder="Search databases..."
+          placeholder="Search records..."
         />
 
       </div>
 
       <button
         className="new-db-btn"
-        onClick={onCreateDatabase}
+        onClick={onCreateRecord}
       >
-        + New Database
+        + Add Record
       </button>
 
     </div>
+
   );
+
 }

@@ -32,10 +32,7 @@ export default function StatsCards() {
   return (
     <div className="stats-grid">
       {stats.map((item) => (
-        <div
-          className="stats-card"
-          key={item.title}
-        >
+        <div className="stats-card" key={item.title}>
           <div className="stats-icon">
             {item.icon}
           </div>
