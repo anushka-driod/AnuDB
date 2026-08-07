@@ -2,7 +2,12 @@ const tableService = require("../services/table.service");
 
 async function createTable(req, res) {
     try {
+        console.log("Request Body:", req.body);
+
         const { databaseId, tableName } = req.body;
+
+        console.log("databaseId =", databaseId);
+        console.log("tableName =", tableName);
 
         const table = await tableService.createTable(
             databaseId,
@@ -16,6 +21,8 @@ async function createTable(req, res) {
         });
 
     } catch (error) {
+        console.error(error);
+
         res.status(400).json({
             success: false,
             message: error.message
