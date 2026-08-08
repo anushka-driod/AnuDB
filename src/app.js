@@ -5,6 +5,9 @@ const databaseRoutes = require("./routes/database.routes");
 const tableRoutes = require("./routes/table.routes");
 const columnRoutes = require("./routes/column.routes");
 const recordRoutes = require("./routes/record.routes");
+const relationshipRoutes = require("./routes/relationship.routes");
+const exportRoutes = require("./routes/export.routes");
+const importRoutes = require("./routes/import.routes");
 
 const app = express();
 
@@ -31,5 +34,8 @@ app.use("/api/databases", databaseRoutes);
 app.use("/api/tables", tableRoutes);
 app.use("/api/columns", columnRoutes);
 app.use("/api/records", recordRoutes);
+app.use("/api/relationships", relationshipRoutes);
+app.use("/api/export", exportRoutes);
+app.use("/api/import", importRoutes);
 
 module.exports = app;

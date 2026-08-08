@@ -3,6 +3,7 @@ const recordModel = require("../models/record.model");
 const recordValueModel = require("../models/recordValue.model");
 const recordValidator = require("../validators/record.validator");
 const queryEngine = require("../engines/query/query.engine");
+const relationshipEngine = require("../engines/relationship/relationship.engine");
 
 // Create Record
 async function createRecord(tableId, values) {
@@ -125,6 +126,14 @@ async function getRecords(tableId, query) {
     });
 
     let records = Object.values(groupedRecords);
+
+    // Get relationship metadata
+    const relationships = await relationshipEngine.getRelationships(tableId);
+
+    records = records.map(record => ({
+        ...record,
+        relationships
+    }));
 
     // Search
     records = queryEngine.applySearch(
