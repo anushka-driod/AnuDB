@@ -26,7 +26,15 @@ export default function Storage() {
 
         </div>
 
+        <button
+          className="new-db-btn"
+          onClick={() => setOpen(true)}
+        >
+          + Upload Backup
+        </button>
+
       </div>
+
 
       <StorageCards />
 
@@ -34,7 +42,9 @@ export default function Storage() {
 
       <StorageFiles />
 
+
       <FloatingButton />
+
 
       <UploadBackupModal
         open={open}
@@ -44,5 +54,4 @@ export default function Storage() {
     </div>
 
   );
-
 }
