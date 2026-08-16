@@ -1,7 +1,10 @@
 import api from "./api";
 
-export const generateApi = (data) =>
-  api.post("/generate-api", data);
-
 export const getApis = () =>
-  api.get("/generate-api");
+  api.get("/apis");
+
+export const createApi = (data) =>
+  api.post("/apis", data);
+
+export const deleteApi = (id) =>
+  api.delete(`/apis/${id}`);

@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-
+const apiRoutes = require("./routes/api.routes");
 const authRoutes = require("./routes/auth.routes");
 const databaseRoutes = require("./routes/database.routes");
 const tableRoutes = require("./routes/table.routes");
@@ -44,5 +44,5 @@ app.use("/api/records", recordRoutes);
 app.use("/api/relationships", relationshipRoutes);
 app.use("/api/export", exportRoutes);
 app.use("/api/import", importRoutes);
-
+app.use("/api/apis", apiRoutes);
 module.exports = app;

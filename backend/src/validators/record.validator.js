@@ -1,7 +1,6 @@
 const db = require("../database/db");
 
-async function validateRecord(tableId, values) {
-    // Get all columns for the table
+async function getColumns(tableId) {
     const result = await db.query(
         `SELECT
             id,
@@ -9,130 +8,159 @@ async function validateRecord(tableId, values) {
             data_type,
             is_required
          FROM columns
-         WHERE table_id = $1`,
+         WHERE table_id = $1
+         ORDER BY id`,
         [tableId]
     );
 
-    const columns = result.rows;
+    return result.rows;
+}
 
-    // Check required fields
-    for (const column of columns) {
+function validateValue(column, value) {
+
+    if (value === null || value === "") {
         if (column.is_required) {
-            const value = values.find(
-                v => v.columnId === column.id
+            throw new Error(
+                `${column.column_name} is required`
             );
+        }
 
-            if (!value || value.value === null || value.value === "") {
+        return;
+    }
+
+    switch (column.data_type) {
+
+        case "VARCHAR":
+        case "TEXT":
+
+            if (typeof value !== "string") {
                 throw new Error(
-                    `${column.column_name} is required`
+                    `${column.column_name} must be text`
                 );
             }
+
+            break;
+
+        case "INTEGER":
+
+            if (
+                typeof value !== "number" ||
+                !Number.isInteger(value)
+            ) {
+                throw new Error(
+                    `${column.column_name} must be INTEGER`
+                );
+            }
+
+            break;
+
+        case "DECIMAL":
+
+            if (
+                typeof value !== "number" ||
+                Number.isNaN(value)
+            ) {
+                throw new Error(
+                    `${column.column_name} must be DECIMAL`
+                );
+            }
+
+            break;
+
+        case "BOOLEAN":
+
+            if (typeof value !== "boolean") {
+                throw new Error(
+                    `${column.column_name} must be BOOLEAN`
+                );
+            }
+
+            break;
+
+        case "DATE":
+
+        case "TIMESTAMP":
+
+            if (typeof value !== "string") {
+                throw new Error(
+                    `${column.column_name} must be a valid date`
+                );
+            }
+
+            break;
+
+        default:
+            break;
+    }
+}
+
+async function validateRecord(tableId, values) {
+
+    const columns = await getColumns(tableId);
+
+    if (columns.length === 0) {
+        throw new Error(
+            "No columns found for this table"
+        );
+    }
+
+    // Required fields
+    for (const column of columns) {
+
+        const item = values.find(
+            v => Number(v.columnId) === Number(column.id)
+        );
+
+        if (
+            column.is_required &&
+            (!item ||
+                item.value === null ||
+                item.value === "")
+        ) {
+            throw new Error(
+                `${column.column_name} is required`
+            );
         }
     }
 
-    // Check data types
+    // Validate supplied values
     for (const item of values) {
+
         const column = columns.find(
-            c => c.id === item.columnId
+            c => Number(c.id) === Number(item.columnId)
         );
 
-        if (!column) continue;
-
-        switch (column.data_type) {
-
-            case "INTEGER":
-                if (!Number.isInteger(item.value)) {
-                    throw new Error(
-                        `${column.column_name} must be INTEGER`
-                    );
-                }
-                break;
-
-            case "DECIMAL":
-                if (typeof item.value !== "number") {
-                    throw new Error(
-                        `${column.column_name} must be DECIMAL`
-                    );
-                }
-                break;
-
-            case "BOOLEAN":
-                if (typeof item.value !== "boolean") {
-                    throw new Error(
-                        `${column.column_name} must be BOOLEAN`
-                    );
-                }
-                break;
-
-            case "TEXT":
-                if (typeof item.value !== "string") {
-                    throw new Error(
-                        `${column.column_name} must be TEXT`
-                    );
-                }
-                break;
+        if (!column) {
+            throw new Error(
+                `Invalid column ID: ${item.columnId}`
+            );
         }
+
+        validateValue(column, item.value);
+    }
+}
+
+async function validateUpdateRecord(tableId, values) {
+
+    const columns = await getColumns(tableId);
+
+    for (const item of values) {
+
+        const column = columns.find(
+            c => Number(c.id) === Number(item.columnId)
+        );
+
+        if (!column) {
+            throw new Error(
+                `Invalid column ID: ${item.columnId}`
+            );
+        }
+
+        validateValue(column, item.value);
     }
 }
 
 module.exports = {
     validateCreateRecord: validateRecord,
-    validateUpdateRecord: async function (tableId, values) {
-
-        const result = await db.query(
-            `SELECT
-                id,
-                column_name,
-                data_type
-             FROM columns
-             WHERE table_id = $1`,
-            [tableId]
-        );
-
-        const columns = result.rows;
-
-        for (const item of values) {
-
-            const column = columns.find(
-                c => c.id === item.columnId
-            );
-
-            if (!column) continue;
-
-            switch (column.data_type) {
-
-                case "INTEGER":
-                    if (!Number.isInteger(item.value)) {
-                        throw new Error(
-                            `${column.column_name} must be INTEGER`
-                        );
-                    }
-                    break;
-
-                case "DECIMAL":
-                    if (typeof item.value !== "number") {
-                        throw new Error(
-                            `${column.column_name} must be DECIMAL`
-                        );
-                    }
-                    break;
-
-                case "BOOLEAN":
-                    if (typeof item.value !== "boolean") {
-                        throw new Error(
-                            `${column.column_name} must be BOOLEAN`
-                        );
-                    }
-                    break;
-
-                case "TEXT":
-                    if (typeof item.value !== "string") {
-                        throw new Error(
-                            `${column.column_name} must be TEXT`
-                        );
-                    }
-                    break;
-            }
-        }
-    }
-}; 
+    validateUpdateRecord
+};
