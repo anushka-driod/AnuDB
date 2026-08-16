@@ -1,28 +1,47 @@
+import { useState } from "react";
 import { useDatabase } from "../../context/DatabaseContext";
 
 export default function WizardStepThree({
   form,
   back,
 }) {
-
   const { createDatabase } = useDatabase();
 
-  const handleCreate = () => {
+  const [loading, setLoading] = useState(false);
 
-    createDatabase({
-      name: form.name,
-      tables: 0,
-      storage: form.storage,
-      status: "Active",
-    });
+  const handleCreate = async () => {
+    if (!form.name.trim()) {
+      alert("Please enter a database name.");
+      return;
+    }
 
-    alert("Database Created Successfully ✅");
+    try {
+      setLoading(true);
 
+      await createDatabase({
+        name: form.name,
+        description: form.description,
+        storage: form.storage,
+        region: form.region,
+        engine: form.engine,
+      });
+
+      alert("Database Created Successfully!");
+
+    } catch (error) {
+      console.error("Create database error:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to create database."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-
       <h2>Review</h2>
 
       <div className="review-box">
@@ -54,6 +73,7 @@ export default function WizardStepThree({
         <button
           className="cancel-btn"
           onClick={back}
+          disabled={loading}
         >
           Back
         </button>
@@ -61,12 +81,14 @@ export default function WizardStepThree({
         <button
           className="create-btn"
           onClick={handleCreate}
+          disabled={loading}
         >
-          Create Database
+          {loading
+            ? "Creating..."
+            : "Create Database"}
         </button>
 
       </div>
-
     </>
   );
 }

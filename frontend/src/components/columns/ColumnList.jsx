@@ -1,70 +1,52 @@
-import {
-  FiEye,
-  FiEdit2,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
-export default function TableList({
-  tables = [],
+export default function ColumnList({
+  columns = [],
+  onEdit,
   onDelete,
 }) {
-
   return (
-
     <div className="dashboard-panel">
 
       <table className="database-table">
 
         <thead>
-
           <tr>
-            <th>Table Name</th>
-            <th>Database ID</th>
-            <th>Records</th>
-            <th>Columns</th>
+            <th>Column Name</th>
+            <th>Data Type</th>
+            <th>Required</th>
             <th>Actions</th>
           </tr>
-
         </thead>
 
         <tbody>
 
-          {tables.length === 0 ? (
+          {columns.length === 0 ? (
 
             <tr>
-
               <td
-                colSpan="5"
+                colSpan="4"
                 style={{
                   textAlign: "center",
                   padding: "40px",
                 }}
               >
-                No tables found.
+                No columns found.
               </td>
-
             </tr>
 
           ) : (
 
-            tables.map((table) => (
+            columns.map((column) => (
 
-              <tr key={table.id}>
+              <tr key={column.id}>
 
-                <td>
-                  {table.table_name}
-                </td>
+                <td>{column.column_name}</td>
 
-                <td>
-                  {table.database_id}
-                </td>
+                <td>{column.data_type}</td>
 
                 <td>
-                  0
-                </td>
-
-                <td>
-                  0
+                  {column.is_required ? "Yes" : "No"}
                 </td>
 
                 <td>
@@ -72,15 +54,9 @@ export default function TableList({
                   <div className="table-actions">
 
                     <button
-                      className="table-action-btn view-btn"
-                      title="View"
-                    >
-                      <FiEye />
-                    </button>
-
-                    <button
                       className="table-action-btn edit-btn"
                       title="Edit"
+                      onClick={() => onEdit(column)}
                     >
                       <FiEdit2 />
                     </button>
@@ -88,9 +64,7 @@ export default function TableList({
                     <button
                       className="table-action-btn delete-btn"
                       title="Delete"
-                      onClick={() =>
-                        onDelete(table.id)
-                      }
+                      onClick={() => onDelete(column.id)}
                     >
                       <FiTrash2 />
                     </button>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import DatabaseSearch from "../../components/database/DatabaseSearch";
 import DatabaseTable from "../../components/dashboard/DatabaseTable";
@@ -6,68 +6,67 @@ import DatabaseModal from "../../components/database/DatabaseModal";
 import FloatingButton from "../../components/dashboard/FloatingButton";
 import Pagination from "../../components/common/Pagination";
 
+import { useDatabase } from "../../context/DatabaseContext";
+
 export default function Databases() {
+  const { databases, loading, loadDatabases } = useDatabase();
 
   const [open, setOpen] = useState(false);
-
   const [search, setSearch] = useState("");
-
   const [status, setStatus] = useState("All");
-
   const [sort, setSort] = useState("A-Z");
-
   const [currentPage, setCurrentPage] = useState(1);
 
-  const databases = [
-    {
-      name: "School",
-      storage: "2.4 GB",
-      tables: 12,
-      status: "Active",
-    },
-    {
-      name: "Hospital",
-      storage: "8.1 GB",
-      tables: 21,
-      status: "Active",
-    },
-    {
-      name: "CRM",
-      storage: "620 MB",
-      tables: 6,
-      status: "Pending",
-    },
-    {
-      name: "Sales",
-      storage: "5.2 GB",
-      tables: 18,
-      status: "Active",
-    },
-    {
-      name: "Inventory",
-      storage: "1.1 GB",
-      tables: 9,
-      status: "Pending",
-    },
-    {
-      name: "Library",
-      storage: "800 MB",
-      tables: 7,
-      status: "Active",
-    },
-  ];
+  useEffect(() => {
+    loadDatabases();
+  }, []);
 
-  const itemsPerPage = 3;
+  const filteredDatabases = useMemo(() => {
+    let result = [...databases];
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
+    // Search
+    if (search.trim()) {
+      result = result.filter((db) =>
+        db.name
+          ?.toLowerCase()
+          .includes(search.toLowerCase())
+      );
+    }
 
-  const paginatedDatabases = databases.slice(
-    startIndex,
-    startIndex + itemsPerPage
+    // Status
+    if (status !== "All") {
+      result = result.filter(
+        (db) => (db.status || "Active") === status
+      );
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      const nameA = a.name?.toLowerCase() || "";
+      const nameB = b.name?.toLowerCase() || "";
+
+      return sort === "A-Z"
+        ? nameA.localeCompare(nameB)
+        : nameB.localeCompare(nameA);
+    });
+
+    return result;
+  }, [databases, search, status, sort]);
+
+  const itemsPerPage = 5;
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredDatabases.length / itemsPerPage)
   );
 
-  const totalPages = Math.ceil(
-    databases.length / itemsPerPage
+  const safePage = Math.min(currentPage, totalPages);
+
+  const startIndex = (safePage - 1) * itemsPerPage;
+
+  const paginatedDatabases = filteredDatabases.slice(
+    startIndex,
+    startIndex + itemsPerPage
   );
 
   return (
@@ -84,20 +83,33 @@ export default function Databases() {
 
       <DatabaseSearch
         search={search}
-        setSearch={setSearch}
+        setSearch={(value) => {
+          setSearch(value);
+          setCurrentPage(1);
+        }}
         status={status}
-        setStatus={setStatus}
+        setStatus={(value) => {
+          setStatus(value);
+          setCurrentPage(1);
+        }}
         sort={sort}
-        setSort={setSort}
+        setSort={(value) => {
+          setSort(value);
+          setCurrentPage(1);
+        }}
         onCreateDatabase={() => setOpen(true)}
       />
 
-      <DatabaseTable
-        databases={paginatedDatabases}
-      />
+      {loading ? (
+        <p style={{ padding: "30px" }}>
+          Loading databases...
+        </p>
+      ) : (
+        <DatabaseTable databases={paginatedDatabases} />
+      )}
 
       <Pagination
-        currentPage={currentPage}
+        currentPage={safePage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
@@ -106,7 +118,10 @@ export default function Databases() {
 
       <DatabaseModal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          loadDatabases();
+        }}
       />
     </>
   );

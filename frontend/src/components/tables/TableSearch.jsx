@@ -1,6 +1,8 @@
 import { FiSearch } from "react-icons/fi";
 
 export default function TableSearch({
+  search,
+  setSearch,
   onCreateTable,
 }) {
   return (
@@ -13,6 +15,8 @@ export default function TableSearch({
         <input
           type="text"
           placeholder="Search tables..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
       </div>
