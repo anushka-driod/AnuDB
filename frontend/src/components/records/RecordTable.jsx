@@ -3,97 +3,101 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
-const records = [
-
-  {
-    id: 1,
-    name: "Rahul",
-    email: "rahul@gmail.com",
-    age: 21,
-  },
-
-  {
-    id: 2,
-    name: "Anjali",
-    email: "anjali@gmail.com",
-    age: 22,
-  },
-
-  {
-    id: 3,
-    name: "Ravi",
-    email: "ravi@gmail.com",
-    age: 20,
-  },
-
-];
-
-export default function RecordTable() {
-
+export default function RecordTable({
+  records = [],
+  columns = [],
+  onEdit,
+  onDelete,
+}) {
   return (
-
     <div className="dashboard-panel">
 
       <table className="database-table">
 
         <thead>
-
           <tr>
 
             <th>ID</th>
 
-            <th>Name</th>
-
-            <th>Email</th>
-
-            <th>Age</th>
+            {columns.map((column) => (
+              <th key={column.id}>
+                {column.column_name}
+              </th>
+            ))}
 
             <th>Actions</th>
 
           </tr>
-
         </thead>
 
         <tbody>
 
-          {records.map((record) => (
+          {records.length === 0 ? (
 
-            <tr key={record.id}>
-
-              <td>{record.id}</td>
-
-              <td>{record.name}</td>
-
-              <td>{record.email}</td>
-
-              <td>{record.age}</td>
-
-              <td>
-
-                <div className="table-actions">
-
-                  <button className="table-action-btn edit-btn">
-                    <FiEdit2 />
-                  </button>
-
-                  <button className="table-action-btn delete-btn">
-                    <FiTrash2 />
-                  </button>
-
-                </div>
-
+            <tr>
+              <td
+                colSpan={columns.length + 2}
+                style={{
+                  textAlign: "center",
+                  padding: "40px",
+                }}
+              >
+                No records found.
               </td>
-
             </tr>
 
-          ))}
+          ) : (
+
+            records.map((record) => (
+
+              <tr key={record.recordId}>
+
+                <td>{record.recordId}</td>
+
+                {columns.map((column) => (
+
+                  <td key={column.id}>
+                    {record[column.column_name] ?? "-"}
+                  </td>
+
+                ))}
+
+                <td>
+
+                  <div className="table-actions">
+
+                    <button
+                      className="table-action-btn edit-btn"
+                      title="Edit"
+                      onClick={() => onEdit(record)}
+                    >
+                      <FiEdit2 />
+                    </button>
+
+                    <button
+                      className="table-action-btn delete-btn"
+                      title="Delete"
+                      onClick={() =>
+                        onDelete(record.recordId)
+                      }
+                    >
+                      <FiTrash2 />
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            ))
+
+          )}
 
         </tbody>
 
       </table>
 
     </div>
-
   );
-
 }
