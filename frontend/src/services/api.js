@@ -26,5 +26,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+export const getProfile = () =>
+  api.get("/auth/profile");
 export default api;

@@ -20,5 +20,10 @@ router.get(
     authenticateToken,
     authController.profile
 );
+router.put(
+    "/profile",
+    authenticateToken,
+    authController.updateProfile
+);
 
 module.exports = router;

@@ -20,6 +20,20 @@ async function registerUser(fullName, email, password) {
 
     return user;
 }
+async function updateProfile(userId, fullName, phone) {
+
+    const user = await userModel.updateProfile(
+        userId,
+        fullName,
+        phone
+    );
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return user;
+}
 
 async function loginUser(email, password) {
 
@@ -58,5 +72,6 @@ console.log("About to call jwt.sign");
 
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    updateProfile
 };

@@ -54,9 +54,47 @@ async function profile(req, res) {
     });
 
 }
+async function updateProfile(req, res) {
+
+    try {
+
+        const { fullName, phone } = req.body;
+
+        if (!fullName) {
+            return res.status(400).json({
+                success: false,
+                message: "Full name is required"
+            });
+        }
+
+        const user =
+            await authService.updateProfile(
+                req.user.id,
+                fullName,
+                phone || null
+            );
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            user
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+}
 
 module.exports = {
     register,
     login,
-    profile
+    profile,
+    updateProfile
 };

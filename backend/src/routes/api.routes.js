@@ -22,10 +22,5 @@ router.delete(
     authenticateToken,
     apiController.deleteApi
 );
-router.get(
-    "/table/:tableId",
-    authenticateToken,
-    apiController.executeTableApi
-);
 
 module.exports = router;
