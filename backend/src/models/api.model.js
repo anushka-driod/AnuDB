@@ -1,8 +1,8 @@
 const db = require("../database/db");
 
 async function createApi(name, tableId, method) {
-
-    const endpoint = `/api/table/${tableId}`;
+    
+const endpoint = `/api/apis/table/${tableId}`;
 
     const result = await db.query(
         `INSERT INTO api_endpoints

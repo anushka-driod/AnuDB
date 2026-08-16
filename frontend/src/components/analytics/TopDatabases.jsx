@@ -1,43 +1,55 @@
-const databases = [
-  {
-    name: "School",
-    queries: "1.2M",
-  },
-  {
-    name: "Hospital",
-    queries: "950K",
-  },
-  {
-    name: "CRM",
-    queries: "620K",
-  },
-];
+export default function TopDatabases({ data = [] }) {
 
-export default function TopDatabases() {
   return (
     <div className="dashboard-panel">
 
       <h3>Top Databases</h3>
 
-      <table className="database-table">
+      {data.length === 0 ? (
 
-        <thead>
-          <tr>
-            <th>Database</th>
-            <th>Queries</th>
-          </tr>
-        </thead>
+        <p>No databases found.</p>
 
-        <tbody>
-          {databases.map((db) => (
-            <tr key={db.name}>
-              <td>{db.name}</td>
-              <td>{db.queries}</td>
+      ) : (
+
+        <table className="database-table">
+
+          <thead>
+
+            <tr>
+              <th>Database</th>
+              <th>Tables</th>
+              <th>Records</th>
             </tr>
-          ))}
-        </tbody>
 
-      </table>
+          </thead>
+
+          <tbody>
+
+            {data.map((database) => (
+
+              <tr key={database.id}>
+
+                <td>
+                  {database.name}
+                </td>
+
+                <td>
+                  {database.tables}
+                </td>
+
+                <td>
+                  {database.records}
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
+
+      )}
 
     </div>
   );

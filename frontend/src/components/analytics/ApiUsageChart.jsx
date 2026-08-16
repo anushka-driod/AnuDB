@@ -8,41 +8,45 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { day: "Mon", requests: 1200 },
-  { day: "Tue", requests: 1800 },
-  { day: "Wed", requests: 2500 },
-  { day: "Thu", requests: 2100 },
-  { day: "Fri", requests: 3200 },
-  { day: "Sat", requests: 2800 },
-  { day: "Sun", requests: 3500 },
-];
+export default function ApiUsageChart({ data = [] }) {
 
-export default function ApiUsageChart() {
   return (
     <div className="dashboard-panel">
 
       <h3>API Usage</h3>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+      {data.length === 0 ? (
 
-          <CartesianGrid stroke="#1E293B" />
+        <p>No API usage recorded yet.</p>
 
-          <XAxis dataKey="day" />
+      ) : (
 
-          <YAxis />
+        <ResponsiveContainer
+          width="100%"
+          height={300}
+        >
 
-          <Tooltip />
+          <BarChart data={data}>
 
-          <Bar
-            dataKey="requests"
-            fill="#2563EB"
-            radius={[8, 8, 0, 0]}
-          />
+            <CartesianGrid stroke="#1E293B" />
 
-        </BarChart>
-      </ResponsiveContainer>
+            <XAxis dataKey="day" />
+
+            <YAxis allowDecimals={false} />
+
+            <Tooltip />
+
+            <Bar
+              dataKey="requests"
+              fill="#2563EB"
+              radius={[8, 8, 0, 0]}
+            />
+
+          </BarChart>
+
+        </ResponsiveContainer>
+
+      )}
 
     </div>
   );

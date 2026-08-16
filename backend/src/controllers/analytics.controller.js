@@ -69,58 +69,6 @@ async function getAnalytics(req, res) {
 
 
         // ===============================
-        // API Usage
-        // ===============================
-        const apiUsageResult = await db.query(
-            `SELECT
-                TO_CHAR(
-                    DATE_TRUNC('day', au.called_at),
-                    'Dy'
-                ) AS day,
-                COUNT(*)::int AS requests
-             FROM api_usage au
-
-             INNER JOIN api_endpoints ae
-                ON ae.id = au.api_id
-
-             INNER JOIN tables t
-                ON t.id = ae.table_id
-
-             INNER JOIN databases d
-                ON d.id = t.database_id
-
-             WHERE d.owner_id = $1
-               AND au.called_at >= CURRENT_DATE - INTERVAL '6 days'
-
-             GROUP BY DATE_TRUNC('day', au.called_at)
-
-             ORDER BY DATE_TRUNC('day', au.called_at)`,
-            [ownerId]
-        );
-
-
-        // ===============================
-        // Total API Calls
-        // ===============================
-        const apiTotalResult = await db.query(
-            `SELECT COUNT(*)::int AS count
-             FROM api_usage au
-
-             INNER JOIN api_endpoints ae
-                ON ae.id = au.api_id
-
-             INNER JOIN tables t
-                ON t.id = ae.table_id
-
-             INNER JOIN databases d
-                ON d.id = t.database_id
-
-             WHERE d.owner_id = $1`,
-            [ownerId]
-        );
-
-
-        // ===============================
         // Top Databases
         // ===============================
         const topDatabaseResult = await db.query(
@@ -141,18 +89,13 @@ async function getAnalytics(req, res) {
 
              GROUP BY d.id, d.name
 
-             ORDER BY records DESC,
-                      tables DESC,
-                      d.name
+             ORDER BY records DESC, tables DESC, d.name
 
              LIMIT 5`,
             [ownerId]
         );
 
 
-        // ===============================
-        // Response
-        // ===============================
         res.json({
 
             success: true,
@@ -166,24 +109,17 @@ async function getAnalytics(req, res) {
                     tableResult.rows[0].count,
 
                 records:
-                    recordResult.rows[0].count,
-
-                apiCalls:
-                    apiTotalResult.rows[0].count
+                    recordResult.rows[0].count
 
             },
 
             databaseGrowth:
                 growthResult.rows,
 
-            apiUsage:
-                apiUsageResult.rows,
-
             topDatabases:
                 topDatabaseResult.rows
 
         });
-
 
     } catch (error) {
 

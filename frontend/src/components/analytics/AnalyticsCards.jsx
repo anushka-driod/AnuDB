@@ -1,47 +1,59 @@
 import {
   FiDatabase,
+  FiTable,
+  FiFileText,
   FiActivity,
-  FiUsers,
-  FiTrendingUp,
 } from "react-icons/fi";
 
-const cards = [
-  {
-    title: "Databases",
-    value: "12",
-    icon: <FiDatabase />,
-  },
-  {
-    title: "API Calls",
-    value: "1.8M",
-    icon: <FiActivity />,
-  },
-  {
-    title: "Users",
-    value: "842",
-    icon: <FiUsers />,
-  },
-  {
-    title: "Growth",
-    value: "+18%",
-    icon: <FiTrendingUp />,
-  },
-];
+export default function AnalyticsCards({ cards }) {
 
-export default function AnalyticsCards() {
+  const data = cards || {};
+
+  const items = [
+    {
+      title: "Databases",
+      value: data.databases ?? 0,
+      icon: <FiDatabase />,
+    },
+    {
+      title: "Tables",
+      value: data.tables ?? 0,
+      icon: <FiTable />,
+    },
+    {
+      title: "Records",
+      value: data.records ?? 0,
+      icon: <FiFileText />,
+    },
+    {
+      title: "API Calls",
+      value: data.apiCalls ?? 0,
+      icon: <FiActivity />,
+    },
+  ];
+
   return (
     <div className="stats-grid">
-      {cards.map((card) => (
-        <div className="stats-card" key={card.title}>
+
+      {items.map((item) => (
+
+        <div
+          className="stats-card"
+          key={item.title}
+        >
+
           <div className="stats-icon">
-            {card.icon}
+            {item.icon}
           </div>
 
-          <h2>{card.value}</h2>
+          <h2>{item.value}</h2>
 
-          <p>{card.title}</p>
+          <p>{item.title}</p>
+
         </div>
+
       ))}
+
     </div>
   );
 }

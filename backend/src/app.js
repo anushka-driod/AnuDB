@@ -10,6 +10,7 @@ const relationshipRoutes = require("./routes/relationship.routes");
 const exportRoutes = require("./routes/export.routes");
 const importRoutes = require("./routes/import.routes");
 const storageRoutes = require("./routes/storage.routes");
+const analyticsRoutes = require("./routes/analytics.routes");
 
 const app = express();
 
@@ -47,4 +48,5 @@ app.use("/api/export", exportRoutes);
 app.use("/api/import", importRoutes);
 app.use("/api/apis", apiRoutes);
 app.use("/api/storage", storageRoutes);
+app.use("/api/analytics", analyticsRoutes);
 module.exports = app;
