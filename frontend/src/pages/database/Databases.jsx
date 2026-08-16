@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import DatabaseSearch from "../../components/database/DatabaseSearch";
 import DatabaseTable from "../../components/dashboard/DatabaseTable";
 import DatabaseModal from "../../components/database/DatabaseModal";
-import FloatingButton from "../../components/dashboard/FloatingButton";
 import Pagination from "../../components/common/Pagination";
 
 import { useDatabase } from "../../context/DatabaseContext";
@@ -114,7 +113,7 @@ export default function Databases() {
         onPageChange={setCurrentPage}
       />
 
-      <FloatingButton />
+     
 
       <DatabaseModal
         open={open}

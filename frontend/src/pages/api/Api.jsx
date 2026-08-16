@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import ApiSearch from "../../components/api/ApiSearch";
 import ApiTable from "../../components/api/ApiTable";
 import GenerateApiModal from "../../components/api/GenerateApiModal";
-import FloatingButton from "../../components/dashboard/FloatingButton";
 
 import { useDatabase } from "../../context/DatabaseContext";
 
@@ -168,7 +167,6 @@ export default function Api() {
       />
 
 
-      <FloatingButton />
 
 
       <GenerateApiModal

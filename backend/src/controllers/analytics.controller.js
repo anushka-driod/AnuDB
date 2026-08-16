@@ -67,7 +67,59 @@ async function getAnalytics(req, res) {
             [ownerId]
         );
 
+        // ===============================
+// API Usage
+// ===============================
+const apiUsageResult = await db.query(
+    `
+    SELECT
+        TO_CHAR(
+            DATE_TRUNC('day', au.called_at),
+            'Dy'
+        ) AS day,
+        COUNT(*)::int AS requests
+    FROM api_usage au
 
+    INNER JOIN api_endpoints ae
+        ON ae.id = au.api_id
+
+    INNER JOIN tables t
+        ON t.id = ae.table_id
+
+    INNER JOIN databases d
+        ON d.id = t.database_id
+
+    WHERE d.owner_id = $1
+      AND au.called_at >= CURRENT_DATE - INTERVAL '6 days'
+
+    GROUP BY DATE_TRUNC('day', au.called_at)
+
+    ORDER BY DATE_TRUNC('day', au.called_at)
+    `,
+    [ownerId]
+);
+
+// ===============================
+// Total API Calls
+// ===============================
+const apiTotalResult = await db.query(
+    `
+    SELECT COUNT(*)::int AS count
+    FROM api_usage au
+
+    INNER JOIN api_endpoints ae
+        ON ae.id = au.api_id
+
+    INNER JOIN tables t
+        ON t.id = ae.table_id
+
+    INNER JOIN databases d
+        ON d.id = t.database_id
+
+    WHERE d.owner_id = $1
+    `,
+    [ownerId]
+);
         // ===============================
         // Top Databases
         // ===============================
@@ -95,7 +147,65 @@ async function getAnalytics(req, res) {
             [ownerId]
         );
 
+// ===============================
+// Recent Activity
+// ===============================
+const recentActivityResult = await db.query(
+    `
+    SELECT *
+    FROM (
 
+        SELECT
+            d.created_at AS activity_time,
+            'database' AS activity_type,
+            'Created Database ''' || d.name || '''' AS message
+        FROM databases d
+        WHERE d.owner_id = $1
+
+        UNION ALL
+
+        SELECT
+            t.created_at AS activity_time,
+            'table' AS activity_type,
+            'Created Table ''' || t.table_name || '''' AS message
+        FROM tables t
+        INNER JOIN databases d
+            ON d.id = t.database_id
+        WHERE d.owner_id = $1
+
+        UNION ALL
+
+        SELECT
+            r.created_at AS activity_time,
+            'record' AS activity_type,
+            'Added Record to ''' || t.table_name || '''' AS message
+        FROM records r
+        INNER JOIN tables t
+            ON t.id = r.table_id
+        INNER JOIN databases d
+            ON d.id = t.database_id
+        WHERE d.owner_id = $1
+
+        UNION ALL
+
+        SELECT
+            ae.created_at AS activity_time,
+            'api' AS activity_type,
+            'Generated API ''' || ae.name || '''' AS message
+        FROM api_endpoints ae
+        INNER JOIN tables t
+            ON t.id = ae.table_id
+        INNER JOIN databases d
+            ON d.id = t.database_id
+        WHERE d.owner_id = $1
+
+    ) activities
+
+    ORDER BY activity_time DESC
+    LIMIT 5
+    `,
+    [ownerId]
+);
         res.json({
 
             success: true,
@@ -109,16 +219,24 @@ async function getAnalytics(req, res) {
                     tableResult.rows[0].count,
 
                 records:
-                    recordResult.rows[0].count
+                    recordResult.rows[0].count,
+                    apiCalls:
+    apiTotalResult.rows[0].count
+
 
             },
 
             databaseGrowth:
                 growthResult.rows,
 
-            topDatabases:
-                topDatabaseResult.rows
+          topDatabases:
+    topDatabaseResult.rows,
 
+recentActivity:
+    recentActivityResult.rows,
+
+    apiUsage:
+    apiUsageResult.rows
         });
 
     } catch (error) {

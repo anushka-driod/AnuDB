@@ -4,7 +4,6 @@ import StorageCards from "../../components/storage/StorageCards";
 import StorageChart from "../../components/storage/StorageChart";
 import StorageFiles from "../../components/storage/StorageFiles";
 import UploadBackupModal from "../../components/storage/UploadBackupModal";
-import FloatingButton from "../../components/dashboard/FloatingButton";
 
 export default function Storage() {
 
@@ -42,8 +41,6 @@ export default function Storage() {
 
       <StorageFiles />
 
-
-      <FloatingButton />
 
 
       <UploadBackupModal

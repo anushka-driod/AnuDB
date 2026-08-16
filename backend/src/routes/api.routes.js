@@ -16,7 +16,10 @@ router.get(
     authenticateToken,
     apiController.getApis
 );
-
+router.get(
+    "/table/:tableId",
+    apiController.executeGetApi
+);
 router.delete(
     "/:id",
     authenticateToken,

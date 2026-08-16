@@ -1,4 +1,6 @@
+const db = require("../database/db");
 const apiService = require("../services/api.service");
+const recordService = require("../services/record.service");
 
 
 // ===============================
@@ -11,12 +13,10 @@ async function createApi(req, res) {
         const { name, tableId, method } = req.body;
 
         if (!name || !tableId || !method) {
-
             return res.status(400).json({
                 success: false,
                 message: "name, tableId and method are required"
             });
-
         }
 
         const api = await apiService.createApi(
@@ -72,6 +72,72 @@ async function getApis(req, res) {
 
 
 // ===============================
+// Execute GET API
+// ===============================
+async function executeGetApi(req, res) {
+
+    try {
+
+        const { tableId } = req.params;
+
+        // Find generated GET API for this table
+        const apiResult = await db.query(
+            `SELECT id
+             FROM api_endpoints
+             WHERE table_id = $1
+               AND method = 'GET'
+             ORDER BY created_at DESC
+             LIMIT 1`,
+            [tableId]
+        );
+
+        if (apiResult.rows.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "GET API not found for this table"
+            });
+
+        }
+
+        const apiId = apiResult.rows[0].id;
+
+        // Get records using existing record system
+        const records = await recordService.getRecords(
+            tableId,
+            req.query
+        );
+
+        // Record API usage
+        await db.query(
+            `INSERT INTO api_usage
+             (api_id, called_at)
+             VALUES ($1, CURRENT_TIMESTAMP)`,
+            [apiId]
+        );
+
+        res.status(200).json({
+            success: true,
+            records
+        });
+
+    } catch (error) {
+
+        console.error(
+            "GET API execution error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+}
+
+
+// ===============================
 // Delete API
 // ===============================
 async function deleteApi(req, res) {
@@ -113,5 +179,6 @@ async function deleteApi(req, res) {
 module.exports = {
     createApi,
     getApis,
+    executeGetApi,
     deleteApi
 };

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import TableSearch from "../../components/tables/TableSearch";
 import TableList from "../../components/tables/TableList";
 import CreateTableModal from "../../components/tables/CreateTableModal";
-import FloatingButton from "../../components/dashboard/FloatingButton";
+
 
 import { getTables, deleteTable } from "../../services/tableService";
 import { useDatabase } from "../../context/DatabaseContext";
@@ -213,9 +213,6 @@ export default function Tables() {
         onDelete={handleDelete}
       />
 
-      {/* FLOATING BUTTON */}
-
-      <FloatingButton />
 
       {/* CREATE MODAL */}
 
