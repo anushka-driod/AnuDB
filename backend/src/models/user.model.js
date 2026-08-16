@@ -18,6 +18,22 @@ async function findUserByEmail(email) {
 
 
 // ===============================
+// Find User By ID
+// ===============================
+async function findUserById(userId) {
+
+    const result = await db.query(
+        `SELECT *
+         FROM users
+         WHERE id = $1`,
+        [userId]
+    );
+
+    return result.rows[0];
+}
+
+
+// ===============================
 // Create User
 // ===============================
 async function createUser(
@@ -28,9 +44,9 @@ async function createUser(
 
     const result = await db.query(
         `INSERT INTO users
-         (full_name, email, password)
-         VALUES ($1, $2, $3)
-         RETURNING id, full_name, email, phone`,
+        (full_name, email, password)
+        VALUES ($1, $2, $3)
+        RETURNING id, full_name, email`,
         [
             fullName,
             email,
@@ -68,8 +84,51 @@ async function updateProfile(
 }
 
 
+// ===============================
+// Update Password
+// ===============================
+async function updatePassword(
+    userId,
+    hashedPassword
+) {
+
+    const result = await db.query(
+        `UPDATE users
+         SET password = $1
+         WHERE id = $2
+         RETURNING id`,
+        [
+            hashedPassword,
+            userId
+        ]
+    );
+
+    return result.rows[0];
+}
+
+
+// ===============================
+// Export
+// ===============================
+// ===============================
+// Delete User
+// ===============================
+async function deleteUser(userId) {
+
+    const result = await db.query(
+        `DELETE FROM users
+         WHERE id = $1
+         RETURNING id`,
+        [userId]
+    );
+
+    return result.rows[0];
+}
 module.exports = {
     findUserByEmail,
+    findUserById,
     createUser,
-    updateProfile
+    updateProfile,
+    updatePassword,
+    deleteUser
 };

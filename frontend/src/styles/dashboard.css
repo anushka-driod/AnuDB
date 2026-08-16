@@ -994,33 +994,86 @@ transform:rotate(360deg);
     background:#1E293B;
     color:white;
 }
-body[data-theme="dark"]{
+/* ===============================
+   THEME
+================================ */
 
---bg:#0F172A;
+body[data-theme="dark"] {
 
---card:#1E293B;
-
---text:white;
-
-}
-
-body[data-theme="light"]{
-
---bg:#F8FAFC;
-
---card:white;
-
---text:#111827;
+    --bg: #020617;
+    --card: #0F172A;
+    --text: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --border: #1E293B;
 
 }
 
-body{
 
-background:var(--bg);
+body[data-theme="light"] {
 
-color:var(--text);
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text: #111827;
+    --text-secondary: #475569;
+    --border: #CBD5E1;
 
-transition:.3s;
+}
+
+
+body {
+
+    background: var(--bg);
+    color: var(--text);
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+
+}
+
+
+/* Panels */
+
+body[data-theme="light"] .dashboard-panel,
+body[data-theme="light"] .stats-card,
+body[data-theme="light"] .database-card {
+
+    background: var(--card);
+    border-color: var(--border);
+}
+
+
+/* Headings */
+
+body[data-theme="light"] h1,
+body[data-theme="light"] h2,
+body[data-theme="light"] h3,
+body[data-theme="light"] h4 {
+
+    color: var(--text);
+
+}
+
+
+/* Secondary text */
+
+body[data-theme="light"] p,
+body[data-theme="light"] .setting-row span {
+
+    color: var(--text-secondary);
+
+}
+
+
+/* Inputs */
+
+body[data-theme="light"] input,
+body[data-theme="light"] textarea,
+body[data-theme="light"] select {
+
+    background: #FFFFFF;
+    color: #111827;
+    border: 1px solid #CBD5E1;
 
 }
 .profile-avatar{

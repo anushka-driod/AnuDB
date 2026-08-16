@@ -25,5 +25,14 @@ router.put(
     authenticateToken,
     authController.updateProfile
 );
-
+router.put(
+    "/change-password",
+    authenticateToken,
+    authController.changePassword
+);
+router.delete(
+    "/account",
+    authenticateToken,
+    authController.deleteAccount
+);
 module.exports = router;
